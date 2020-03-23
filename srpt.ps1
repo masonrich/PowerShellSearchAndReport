@@ -23,9 +23,6 @@ if($path -eq $NULL){
     exit 1
 }
 
-#start timer
-#$sw = [Diagnostics.Stopwatch]::StartNew()
-
 #look at the files in the given path
 $files = get-childitem -Path $path -recurse
 
@@ -73,25 +70,22 @@ Foreach ($file in $files){
     if(($file.GetType().Name -eq "FileInfo") -and ($file.mode -notmatch 'l') -and ($file.extension -eq ".exe")){
         $totalExe++
     }
-    #get the byte count
-    #$totalSize += $file.Length
 
 }
 
-#stop the timer
-#$sw.Stop()
+#do not count current dir
+#$totalDir--
 
 #Write all of the ouput
 Write-Output "SearchReport $myEnv $path $todaysDate"
-#Write-Host "Execution time " $sw.Elapsed
 Write-Host "Directories "$totalDir.ToString("N0")
-Write-Host "Files "$totalFiles.ToString("N0")
-Write-Host "Sym links "$totalSym.ToString("N0")
-Write-Host "Old files "$totalOld.ToString("N0")
-Write-Host "Large files "$totalBig.ToString("N0")
-Write-Host "Graphics files "$totalPic.ToString("N0")
-Write-Host "Temporary files "$totalTmp.ToString("N0")
-Write-Host "Executable files "$totalExe.ToString("N0")
-Write-Host "TotalFileSize "$totalSize.ToString("N0")
+Write-Host "Files"$totalFiles.ToString("N0")
+Write-Host "Sym links"$totalSym.ToString("N0")
+Write-Host "Old files"$totalOld.ToString("N0")
+Write-Host "Large files"$totalBig.ToString("N0")
+Write-Host "Graphics files"$totalPic.ToString("N0")
+Write-Host "Temporary files"$totalTmp.ToString("N0")
+Write-Host "Executable files"$totalExe.ToString("N0")
+Write-Host "TotalFileSize"$totalSize.ToString("N0")
 
 exit 0
