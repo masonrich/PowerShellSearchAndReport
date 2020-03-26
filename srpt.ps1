@@ -17,6 +17,8 @@ $totalExe = 0
 $totalTmp = 0
 $totalSize = 0
 
+#current dir
+
 #exit if path is null
 if($path -eq $NULL){
     echo "Usage: srpt PATH"
@@ -30,7 +32,7 @@ $files = get-childitem -Path $path -recurse
 Foreach ($file in $files){
     #total directories
     if($file.GetType().Name -eq "DirectoryInfo"){
-        $totalDir++
+            $totalDir++
     }
     #total files
     if(($file.GetType().Name -eq "FileInfo") -and ($file.mode -notmatch 'l')){
@@ -67,8 +69,11 @@ Foreach ($file in $files){
         }
     }
     #executable files
-    if(($file.GetType().Name -eq "FileInfo") -and ($file.mode -notmatch 'l') -and ($file.extension -eq ".exe")){
-        $totalExe++
+    if(($file.GetType().Name -eq "FileInfo") -and ($file.mode -notmatch 'l')){
+        $extn = [IO.Path]::GetExtension($file)
+        if(($extn -eq ".exe") -or ($extn -eq ".bat") -or ($extn -eq ".ps1")){
+            $totalExe++
+        }
     }
 
 }
@@ -78,14 +83,14 @@ Foreach ($file in $files){
 
 #Write all of the ouput
 Write-Output "SearchReport $myEnv $path $todaysDate"
-Write-Host "Directories "$totalDir.ToString("N0")
+Write-Host "Directories"$totalDir.ToString("N0")
 Write-Host "Files"$totalFiles.ToString("N0")
 Write-Host "Sym links"$totalSym.ToString("N0")
+Write-Host "Temporary files"$totalTmp.ToString("N0")
+Write-Host "Graphics files"$totalPic.ToString("N0")
+Write-Host "Executable files"$totalExe.ToString("N0")
 Write-Host "Old files"$totalOld.ToString("N0")
 Write-Host "Large files"$totalBig.ToString("N0")
-Write-Host "Graphics files"$totalPic.ToString("N0")
-Write-Host "Temporary files"$totalTmp.ToString("N0")
-Write-Host "Executable files"$totalExe.ToString("N0")
 Write-Host "TotalFileSize"$totalSize.ToString("N0")
 
 exit 0
